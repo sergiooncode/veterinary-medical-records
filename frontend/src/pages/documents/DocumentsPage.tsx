@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { StructuredData, Diagnosis, Procedure, Medication, ClinicInfo } from '../../types';
 import { DocumentPreview } from '../../features/workspace/components/DocumentPreview';
 import { ExtractedTextPanel } from '../../features/workspace/components/ExtractedTextPanel';
@@ -14,6 +14,10 @@ interface DocumentsPageProps {
 
 export function DocumentsPage({ onStatusChange, uploadHandlerRef }: DocumentsPageProps): JSX.Element {
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [fileName, setFileName] = useState<string>('Sample Medical Record.pdf');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [structuredData, setStructuredData] = useState<StructuredData>({
     petName: 'Bella',
     species: 'Canine',
@@ -120,15 +124,50 @@ export function DocumentsPage({ onStatusChange, uploadHandlerRef }: DocumentsPag
     });
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+    setSelectedFile(file);
+    setFileName(file.name);
+  };
+
+  useEffect(() => {
+    if (uploadHandlerRef) {
+      uploadHandlerRef.current = () => {
+        fileInputRef.current?.click();
+      };
+    }
+    return () => {
+      if (uploadHandlerRef) {
+        uploadHandlerRef.current = null;
+      }
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [uploadHandlerRef, previewUrl]);
+
   return (
     <>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
       <main className="main-content">
         <div className="three-column-layout">
           <div className="column left-column">
             <DocumentPreview
-              previewUrl={null}
-              fileName="Sample Medical Record.pdf"
-              selectedFile={null}
+              previewUrl={previewUrl}
+              fileName={fileName}
+              selectedFile={selectedFile}
               currentPage={currentPage}
               onPageChange={setCurrentPage}
             />

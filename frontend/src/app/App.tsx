@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { Router } from './router';
 import { AppShell } from './layouts/AppShell';
 
@@ -7,9 +8,11 @@ import { AppShell } from './layouts/AppShell';
  * Note: Providers and BrowserRouter are set up in main.tsx
  */
 export function App(): JSX.Element {
+  const uploadHandlerRef = useRef<(() => void) | null>(null);
+
   return (
-    <AppShell>
-      <Router />
+    <AppShell onUploadClick={() => uploadHandlerRef.current?.()}>
+      <Router uploadHandlerRef={uploadHandlerRef} />
     </AppShell>
   );
 }
