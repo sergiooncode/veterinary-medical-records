@@ -4,17 +4,21 @@ A system for intelligent processing system for veterinary medical records.
 
 ## Iterative and incremental approach
 
-Iteration 0 - Frontend skeleton + fake Data and meaningful placeholders
+- Iteration 0 - Frontend skeleton + fake Data and meaningful placeholders
 
 <img src="./resources/iterative_approach/iter0.png" width="600" />
 
-Iteration 1 – Real File Upload + Basic Preview
+- Iteration 1 – Real File Upload + Basic Preview
 
-Iteration 2 – Extraction Flow (With Mock API First)
+<img src="./resources/iterative_approach/iter1_1.png" width="600" />
+<br><br>
+<img src="./resources/iterative_approach/iter1_2.png" width="600" />
 
-Iteration 3 – Wire to Real Backend Extraction API
+- Iteration 2 – Extraction Flow (With Mock API First)
 
-Iteration 4 – Make the Structured Form Properly Editable
+- Iteration 3 – Wire to Real Backend Extraction API
+
+- Iteration 4 – Make the Structured Form Properly Editable
 
 ## Architecture
 
