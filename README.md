@@ -10,8 +10,10 @@ A system for intelligent processing system for veterinary medical records.
 
 - Iteration 1 – Real File Upload + Basic Preview
 
+<img src="./resources/iterative_approach/iter1_0.png" width="600" />
+<br>
 <img src="./resources/iterative_approach/iter1_1.png" width="600" />
-<br><br>
+<br>
 <img src="./resources/iterative_approach/iter1_2.png" width="600" />
 
 - Iteration 2 – Extraction Flow (With Mock API First)
