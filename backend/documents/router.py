@@ -11,6 +11,7 @@ from .exceptions import (
     UnsupportedFileTypeError,
 )
 from .schemas import ProcessRequest, ValidatedFile
+from .services.structured_info.parsers import parse_structured_data
 from .services.text_extraction.extractors import extract_text_from_file
 
 router = APIRouter(prefix="/documents", tags=["documents"])
@@ -73,25 +74,7 @@ async def process_document(
 
     try:
         extracted_text = extract_text_from_file(file_path)
-        structured_data = {
-            "pet_name": None,
-            "species": "Canine",
-            "breed": None,
-            "weight": None,
-            "diagnoses": [],
-            "past_medical_issues": [],
-            "chronic_conditions": [],
-            "procedures": [],
-            "medications": [],
-            "symptom_onset_date": None,
-            "notes": "notes",
-            "clinic_info": {
-                "name": None,
-                "address": None,
-                "phone": None,
-                "veterinarian": None,
-            },
-        }
+        structured_data = parse_structured_data(extracted_text, logger)
 
         logger.info(f"Document processed: {file_id}")
 

@@ -59,7 +59,12 @@ A system for intelligent processing system for veterinary medical records.
 <img src="./resources/iterative_approach/iter3_1_png.png" width="600" />
 <br>
 
-- Iteration 4 – Wire to Real Backend API to generate structured info
+- Iteration 4 – Wire structured info service on API to parse that info 
+
+<img src="./resources/iterative_approach/iter4_0.png" width="600" />
+<br>
+<img src="./resources/iterative_approach/iter4_1.png" width="600" />
+<br>
 
 - Iteration 5 – Save extracted text and structured info in DB so a user can continue reviewing a document without processing it again
 

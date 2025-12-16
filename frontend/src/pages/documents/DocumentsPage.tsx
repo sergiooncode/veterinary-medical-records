@@ -19,54 +19,27 @@ export function DocumentsPage({ onStatusChange, uploadHandlerRef }: DocumentsPag
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [structuredData, setStructuredData] = useState<StructuredData>({
-    petName: 'Bella',
-    species: 'Canine',
-    breed: 'Labrador Retriever',
-    weight: '25 kg',
-    diagnoses: [
-      {
-        name: 'Otitis externa',
-        date: '2024-10-01',
-        icd_code: null,
-        is_chronic: false,
-      },
-    ],
-    past_medical_issues: ['Allergic dermatitis'],
-    chronic_conditions: ['Arthritis'],
-    procedures: [
-      {
-        name: 'Ear cleaning',
-        date: '2024-10-01',
-        cpt_code: null,
-        reason: 'Otitis',
-        cost: 120,
-      },
-    ],
-    medications: [
-      {
-        name: 'Prednisone',
-        start_date: '2024-10-02',
-        end_date: null,
-        dosage: '5 mg',
-        frequency: 'SID',
-      },
-    ],
-    symptom_onset_date: '2024-09-28',
-    notes: '12 y/o FS Labrador presenting for chronic ear infections. Pruritic, head shaking, and erythematous ear canals.',
+    petName: '',
+    species: '',
+    breed: '',
+    weight: '',
+    diagnoses: [],
+    past_medical_issues: [],
+    chronic_conditions: [],
+    procedures: [],
+    medications: [],
+    symptom_onset_date: null,
+    notes: '',
     clinic_info: {
-      name: 'Happy Paws Veterinary Clinic',
-      address: '123 Pet Lane, Petville',
-      phone: '555-123-4567',
-      veterinarian: 'Dr. Jane Smith',
+      name: null,
+      address: null,
+      phone: null,
+      veterinarian: null,
     },
   });
   const [extractedText, setExtractedText] = useState<string>(
     [
-      'Bella is a 12-year-old spayed female Labrador Retriever presenting for chronic ear infections.',
-      'History of allergic dermatitis managed with diet and intermittent steroids.',
-      'On exam: erythematous ear canals with moderate ceruminous discharge, no neurologic deficits.',
-      'Assessment: chronic otitis externa, likely secondary to underlying allergic skin disease.',
-      'Plan: ear cleaning, topical otic medication, recheck in 2 weeks.',
+      'No file has been loaded yet.',
     ].join('\n\n'),
   );
 
