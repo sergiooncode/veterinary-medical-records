@@ -34,6 +34,9 @@ A system for intelligent processing system for veterinary medical records.
 - Text extraction:
   - Properly test certain image files like JPEG 
   - It will be extended to Word documents (doc, docx)
+- Token-based user authentication stored in secure cookies
+- Statically serve original file for the document preview from the backend for local (and in production from S3)
+- Add more tests
 
 ## Iterative and incremental approach
 
@@ -76,7 +79,7 @@ A system for intelligent processing system for veterinary medical records.
 <img src="./resources/iterative_approach/iter3_1_png.png" width="600" />
 <br>
 
-- Iteration 4 – Wire structured info service on API to parse that info 
+- Iteration 4 – Wire structured info service on API to extract that info given the extracted text from the document 
 
 <img src="./resources/iterative_approach/iter4_0.png" width="600" />
 <br>
@@ -90,7 +93,17 @@ A system for intelligent processing system for veterinary medical records.
 <img src="./resources/iterative_approach/iter4_completed.png" width="600" />
 <br>
 
-- Iteration 5 – Save extracted text and structured info in DB so a user can continue reviewing a document without processing it again
+- Iteration 5 – Save extracted text and structured info in DB and add endpoint to list processed documents
+
+Note: a user can continue reviewing a document without processing it again after this iteration. Also see that the
+extracted data and structured info can be returned by the backend but not the original document which was left
+as future improvement
+
+<img src="./resources/iterative_approach/iter5_0.png" width="600" />
+<br>
+<img src="./resources/iterative_approach/iter5_1.png" width="600" />
+<br>
+
 
 ## Development
 
@@ -116,3 +129,4 @@ A system for intelligent processing system for veterinary medical records.
 
 - Other tooling
   - Run `make fix` to fix code format using `ruff`
+  - DB schema migrations can be to handle schema changes, migrations can be run with `make migrate` 

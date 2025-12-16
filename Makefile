@@ -25,7 +25,7 @@ backend-dev:
 	@echo "Starting frontend dev server in Docker (npm run dev)..."
 	docker-compose up backend --build
 
-backend-test: ## Run backend tests in Docker container
+backend-test:
 	@echo "Running backend tests in Docker container..."
 	@if ! docker ps | grep -q veterinary-backend; then \
 		echo "Backend container not running. Starting it..."; \
@@ -34,7 +34,7 @@ backend-test: ## Run backend tests in Docker container
 	fi
 	@docker exec veterinary-backend sh -c "cd /app/backend && python -m pytest . 2>/dev/null || (python -c 'import pytest' 2>/dev/null && echo 'pytest found but no tests' || echo 'pytest not installed. Add pytest to dependencies.')"
 
-backend-mypy: ## Run mypy type checking in backend (inside Docker)
+backend-mypy:
 	@echo "Running mypy in backend container..."
 	@if ! docker ps | grep -q veterinary-backend; then \
 		echo "Backend container not running. Starting it..."; \
@@ -43,9 +43,24 @@ backend-mypy: ## Run mypy type checking in backend (inside Docker)
 	fi
 	@docker exec veterinary-backend sh -c "cd /app/backend && mypy ."
 
-logs: ## Show Docker logs (use SERVICE=name for specific service)
+logs:
 	@if [ -z "$(SERVICE)" ]; then \
 		docker-compose logs -f --tail=100; \
 	else \
 		docker-compose logs -f --tail=100 $(SERVICE); \
 	fi
+
+migrate:
+	@echo "Running database migrations..."
+	@docker exec veterinary-backend sh -c "cd /app/backend && alembic upgrade head"
+
+makemigrations:
+	@if [ -z "$(MESSAGE)" ]; then \
+		echo "Error: MESSAGE is required. Usage: make migrate-create MESSAGE='description'"; \
+		exit 1; \
+	fi
+	@echo "Creating migration: $(MESSAGE)"
+	@docker exec veterinary-backend sh -c "cd /app/backend && alembic revision --autogenerate -m '$(MESSAGE)'"
+
+dbshell:
+	@docker exec -it veterinary-postgres psql -U veterinary_user -d veterinary_db
