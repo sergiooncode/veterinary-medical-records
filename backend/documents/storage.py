@@ -18,9 +18,7 @@ class StorageBackend(ABC):
         pass
 
     @abstractmethod
-    async def find_file(
-        self, file_id: str
-    ) -> Path | None:
+    async def find_file(self, file_id: str) -> Path | None:
         pass
 
 

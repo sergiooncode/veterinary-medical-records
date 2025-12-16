@@ -1,4 +1,4 @@
-.PHONY: help fix test backend-test frontend-test frontend-dev up down build dev logs logs-dev migrate makemigrations psql
+.PHONY: help fix test backend-test backend-mypy frontend-test frontend-dev up down build dev logs logs-dev migrate makemigrations psql
 
 help: ## Show this help message
 	@echo "Available commands:"
@@ -33,6 +33,15 @@ backend-test: ## Run backend tests in Docker container
 		sleep 5; \
 	fi
 	@docker exec veterinary-backend sh -c "cd /app/backend && python -m pytest . 2>/dev/null || (python -c 'import pytest' 2>/dev/null && echo 'pytest found but no tests' || echo 'pytest not installed. Add pytest to dependencies.')"
+
+backend-mypy: ## Run mypy type checking in backend (inside Docker)
+	@echo "Running mypy in backend container..."
+	@if ! docker ps | grep -q veterinary-backend; then \
+		echo "Backend container not running. Starting it..."; \
+		docker-compose up -d backend; \
+		sleep 5; \
+	fi
+	@docker exec veterinary-backend sh -c "cd /app/backend && mypy ."
 
 logs: ## Show Docker logs (use SERVICE=name for specific service)
 	@if [ -z "$(SERVICE)" ]; then \

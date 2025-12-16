@@ -1,8 +1,8 @@
 from pathlib import Path
 
-import pytesseract
-from PIL import Image
-from pypdf import PdfReader
+import pytesseract  # type: ignore[import-untyped]
+from PIL import Image  # type: ignore[import-untyped]
+from pypdf import PdfReader  # type: ignore[import-untyped]
 
 from documents.exceptions import TextExtractionError, UnsupportedFileTypeError
 
@@ -25,7 +25,7 @@ def extract_text_from_file(file_path: Path) -> str:
         try:
             image = Image.open(file_path)
             if image.mode not in ("RGB", "L"):
-                image = image.convert("RGB")
+                image = image.convert("RGB")  # type: ignore[assignment]
             text = pytesseract.image_to_string(image, config="--psm 6")
             return text.strip()
         except Exception as e:

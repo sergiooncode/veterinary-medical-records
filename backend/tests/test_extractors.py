@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from documents.exceptions import TextExtractionError, UnsupportedFileTypeError
+from documents.exceptions import UnsupportedFileTypeError
 from documents.services.text_extraction.extractors import extract_text_from_file
 
 
@@ -56,4 +56,3 @@ def test_extract_text_supported_pdf_file_type(sample_pdf):
 
 def test_extract_text_supported_png_file_type(sample_png):
     extract_text_from_file(sample_png)
-

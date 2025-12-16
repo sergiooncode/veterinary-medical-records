@@ -2,7 +2,7 @@ import uuid
 
 from common.logging import get_logger
 from documents.storage import storage
-from fastapi import APIRouter, UploadFile, File, HTTPException, Body, Depends
+from fastapi import APIRouter, Body, Depends, File, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
 
 from .exceptions import (
@@ -10,7 +10,7 @@ from .exceptions import (
     TextExtractionError,
     UnsupportedFileTypeError,
 )
-from .schemas import ValidatedFile, ProcessRequest
+from .schemas import ProcessRequest, ValidatedFile
 from .services.text_extraction.extractors import extract_text_from_file
 
 router = APIRouter(prefix="/documents", tags=["documents"])
