@@ -2,6 +2,22 @@
 
 A system for intelligent processing system for veterinary medical records.
 
+## Architecture
+
+- **Frontend**: ReactJS with TypeScript and Vite for tooling
+- **Backend**: FastAPI (Python)
+- **Containerization**: Docker Compose for local development
+
+## Assumptions & Design Decisions
+
+- **Monorepo Structure**: Chose monorepo with Docker Compose for convenient local development
+- **File Storage**: Local file storage is used for development; in production, S3 or similar would be used. Abstraction added around storage.
+- **Text Extraction**: Started with PyPDF2 for PDF and pytesseract/PIL with OCR for images; can be extended with Word document parsing
+
+## Future improvements
+
+- TBA
+
 ## Iterative and incremental approach
 
 - Iteration 0 - Frontend skeleton + fake Data and meaningful placeholders
@@ -27,20 +43,25 @@ A system for intelligent processing system for veterinary medical records.
 <img src="./resources/iterative_approach/iter2_3.png" width="600" />
 <br>
 
-- Iteration 3 – Wire to Real Backend Extraction API
+- Iteration 3 – Wire to Real Backend API to extract text
 
-- Iteration 4 – Save extracted text and structured info in DB so a user can continue reviewing a document without processing it again
+  - PDF document file type
 
-## Architecture
+<img src="./resources/iterative_approach/iter3_0_pdf.png" width="600" />
+<br>
+<img src="./resources/iterative_approach/iter3_1_pdf.png" width="600" />
+<br>
 
-- **Frontend**: ReactJS with TypeScript and Vite for tooling
-- **Backend**: FastAPI (Python)
-- **Containerization**: Docker Compose for local development
+  - PNG document file type
 
-## Assumptions & Design Decisions
+<img src="./resources/iterative_approach/iter3_0_png.png" width="600" />
+<br>
+<img src="./resources/iterative_approach/iter3_1_png.png" width="600" />
+<br>
 
-- **Monorepo Structure**: Chose monorepo with Docker Compose for convenient local development
-- **File Storage**: Local file storage is used for development; in production, S3 or similar would be used. Abstraction added around storage.
+- Iteration 4 – Wire to Real Backend API to generate structured info
+
+- Iteration 5 – Save extracted text and structured info in DB so a user can continue reviewing a document without processing it again
 
 ## Development
 
@@ -63,3 +84,6 @@ A system for intelligent processing system for veterinary medical records.
 - Run tests
   - Backend: `make backend-test`
   - Frontend: `make frontend-test`
+
+- Other tooling
+  - Run `make fix` to fix code format using `ruff`

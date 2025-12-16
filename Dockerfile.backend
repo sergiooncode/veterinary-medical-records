@@ -7,6 +7,9 @@ RUN apt-get update && apt-get install -y \
     curl \
     libpq-dev \
     python3-dev \
+    tesseract-ocr \
+    libtesseract-dev \
+    libleptonica-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory

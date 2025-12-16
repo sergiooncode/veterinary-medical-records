@@ -71,4 +71,3 @@ def test_process_document(client):
     assert "extracted_text" in data
     assert "structured_data" in data
     assert data["status"] == "processed"
-

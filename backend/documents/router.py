@@ -5,8 +5,13 @@ from documents.storage import storage
 from fastapi import APIRouter, UploadFile, File, HTTPException, Body, Depends
 from fastapi.responses import JSONResponse
 
-from .exceptions import FileValidationError
+from .exceptions import (
+    FileValidationError,
+    TextExtractionError,
+    UnsupportedFileTypeError,
+)
 from .schemas import ValidatedFile, ProcessRequest
+from .services.text_extraction.extractors import extract_text_from_file
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 
@@ -60,18 +65,14 @@ async def process_document(
     """Process an uploaded document to extract text and structured data."""
     file_id = request.file_id
 
+    file_path = await storage.find_file(file_id)
+    if not file_path:
+        raise HTTPException(
+            status_code=404, detail=f"File not found for file_id: {file_id}"
+        )
+
     try:
-        extracted_text = """
-        Bella is a 12-year-old spayed female Labrador Retriever presenting for chronic ear infections.
-
-History of allergic dermatitis managed with diet and intermittent steroids.
-
-On exam: erythematous ear canals with moderate ceruminous discharge, no neurologic deficits.
-
-Assessment: chronic otitis externa, likely secondary to underlying allergic skin disease.
-
-Plan: ear cleaning, topical otic medication, recheck in 2 weeks.
-        """
+        extracted_text = extract_text_from_file(file_path)
         structured_data = {
             "pet_name": None,
             "species": "Canine",
@@ -103,8 +104,10 @@ Plan: ear cleaning, topical otic medication, recheck in 2 weeks.
         }
 
         return JSONResponse(status_code=200, content=result_data)
-    except HTTPException:
-        raise
+    except UnsupportedFileTypeError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except TextExtractionError as e:
+        raise HTTPException(status_code=500, detail=str(e))
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Failed to process document: {str(e)}"

@@ -47,4 +47,3 @@ async def test_get_file_content_returns_content(storage, temp_dir):
 async def test_get_file_content_raises_on_missing_file(storage):
     with pytest.raises(FileNotFoundError):
         await storage.get_file_content("nonexistent", ".txt")
-
