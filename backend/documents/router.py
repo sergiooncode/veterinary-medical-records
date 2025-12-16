@@ -1,18 +1,14 @@
 import uuid
-from pathlib import Path
 
 from common.logging import get_logger
+from documents.storage import storage
 from fastapi import APIRouter, UploadFile, File, HTTPException, Body, Depends
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
+
+from .schemas import ValidatedFile
 
 router = APIRouter(prefix="/documents", tags=["documents"])
-
-UPLOAD_DIR = Path("/app/backend/uploads")
-UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-
-ALLOWED_EXTENSIONS = {".pdf", ".doc", ".docx", ".jpg", ".jpeg", ".png"}
-MAX_FILE_SIZE = 50 * 1024 * 1024  # 50 MB
 
 
 @router.post("/upload")
@@ -21,46 +17,36 @@ async def upload_document(
     logger=Depends(get_logger),
 ):
     """Upload a document file."""
-    file_ext = Path(file.filename).suffix.lower()
-    if file_ext not in ALLOWED_EXTENSIONS:
-        raise HTTPException(
-            status_code=400,
-            detail=f"File type not allowed. Allowed types: {', '.join(ALLOWED_EXTENSIONS)}",
-        )
-
     content = await file.read()
-    file_size = len(content)
-
-    if file_size > MAX_FILE_SIZE:
-        raise HTTPException(
-            status_code=400,
-            detail=f"File too large. Maximum size: {MAX_FILE_SIZE / (1024 * 1024):.0f} MB",
-        )
-
-    if file_size == 0:
-        raise HTTPException(status_code=400, detail="File is empty")
-
-    file_id = str(uuid.uuid4())
-    original_filename = file.filename
-    safe_filename = f"{file_id}{file_ext}"
-    file_path = UPLOAD_DIR / safe_filename
 
     try:
-        with open(file_path, "wb") as f:
-            f.write(content)
+        validated = ValidatedFile(
+            filename=file.filename,
+            content=content,
+            content_type=file.content_type,
+        )
+    except ValidationError as e:
+        raise HTTPException(status_code=400, detail=e.errors()[0]["msg"])
+
+    file_id = str(uuid.uuid4())
+
+    try:
+        safe_filename = await storage.save(
+            file_id, validated.content, validated.file_ext
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to save file: {str(e)}")
 
-    logger.info(f"Document uploaded: {file_id} - {original_filename}")
+    logger.info(f"Document uploaded: {file_id} - {validated.filename}")
 
     return JSONResponse(
         status_code=200,
         content={
             "id": file_id,
-            "filename": original_filename,
+            "filename": validated.filename,
             "saved_filename": safe_filename,
-            "size": file_size,
-            "content_type": file.content_type,
+            "size": len(validated.content),
+            "content_type": validated.content_type,
             "message": "File uploaded successfully",
         },
     )
