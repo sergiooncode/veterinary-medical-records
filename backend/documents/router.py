@@ -4,9 +4,9 @@ from common.logging import get_logger
 from documents.storage import storage
 from fastapi import APIRouter, UploadFile, File, HTTPException, Body, Depends
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, ValidationError
 
-from .schemas import ValidatedFile
+from .exceptions import FileValidationError
+from .schemas import ValidatedFile, ProcessRequest
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 
@@ -25,8 +25,8 @@ async def upload_document(
             content=content,
             content_type=file.content_type,
         )
-    except ValidationError as e:
-        raise HTTPException(status_code=400, detail=e.errors()[0]["msg"])
+    except FileValidationError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
     file_id = str(uuid.uuid4())
 
@@ -50,11 +50,6 @@ async def upload_document(
             "message": "File uploaded successfully",
         },
     )
-
-
-# Pydantic models
-class ProcessRequest(BaseModel):
-    file_id: str
 
 
 @router.post("/process")

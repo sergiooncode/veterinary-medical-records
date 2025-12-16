@@ -1,0 +1,3 @@
+class FileValidationError(Exception):
+    pass
+

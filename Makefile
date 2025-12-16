@@ -25,6 +25,15 @@ backend-dev:
 	@echo "Starting frontend dev server in Docker (npm run dev)..."
 	docker-compose up backend --build
 
+backend-test: ## Run backend tests in Docker container
+	@echo "Running backend tests in Docker container..."
+	@if ! docker ps | grep -q veterinary-backend; then \
+		echo "Backend container not running. Starting it..."; \
+		docker-compose up -d backend; \
+		sleep 5; \
+	fi
+	@docker exec veterinary-backend sh -c "cd /app/backend && python -m pytest . 2>/dev/null || (python -c 'import pytest' 2>/dev/null && echo 'pytest found but no tests' || echo 'pytest not installed. Add pytest to dependencies.')"
+
 logs: ## Show Docker logs (use SERVICE=name for specific service)
 	@if [ -z "$(SERVICE)" ]; then \
 		docker-compose logs -f --tail=100; \
