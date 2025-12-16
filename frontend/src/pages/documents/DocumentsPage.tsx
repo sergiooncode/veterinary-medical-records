@@ -113,6 +113,7 @@ export function DocumentsPage({ onStatusChange, uploadHandlerRef }: DocumentsPag
     formData.append('file', file);
 
     try {
+      if (onStatusChange) onStatusChange('In Progress');
       const uploadResponse = await fetch(`${apiUrl}/api/documents/upload`, {
         method: 'POST',
         body: formData,
@@ -146,8 +147,10 @@ export function DocumentsPage({ onStatusChange, uploadHandlerRef }: DocumentsPag
           clinic_info: sd.clinic_info || { name: null, address: null, phone: null, veterinarian: null },
         });
       }
+      if (onStatusChange) onStatusChange('Completed');
     } catch (error) {
       console.error('Upload/process error:', error);
+      if (onStatusChange) onStatusChange('Ready');
     }
   };
 

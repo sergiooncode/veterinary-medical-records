@@ -1,5 +1,6 @@
 import React from 'react';
 import '../../styles/AppShell.css';
+import { ProcessingStatus } from '../../features/workspace/components/ProcessingStatus';
 
 type Status = 'Ready' | 'In Progress' | 'Completed';
 
@@ -9,11 +10,7 @@ interface AppShellProps {
   children: React.ReactNode;
 }
 
-/**
- * Main application shell layout
- * Contains the header/navbar and the main content area
- */
-export function AppShell({ children, onUploadClick }: AppShellProps): JSX.Element {
+export function AppShell({ children, onUploadClick, status }: AppShellProps): JSX.Element {
   return (
     <div className="app-shell">
       <nav className="navbar">
@@ -21,6 +18,7 @@ export function AppShell({ children, onUploadClick }: AppShellProps): JSX.Elemen
           <h1 className="navbar-title">Vet Medical Record Workspace</h1>
         </div>
         <div className="navbar-right">
+          {status && <ProcessingStatus status={status} />}
           <button className="upload-button" type="button" onClick={onUploadClick}>
             Upload Document
           </button>

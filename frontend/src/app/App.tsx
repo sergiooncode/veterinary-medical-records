@@ -1,18 +1,16 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Router } from './router';
 import { AppShell } from './layouts/AppShell';
 
-/**
- * Main App component
- * Sets up layout and routing
- * Note: Providers and BrowserRouter are set up in main.tsx
- */
+type Status = 'Ready' | 'In Progress' | 'Completed';
+
 export function App(): JSX.Element {
   const uploadHandlerRef = useRef<(() => void) | null>(null);
+  const [status, setStatus] = useState<Status>('Ready');
 
   return (
-    <AppShell onUploadClick={() => uploadHandlerRef.current?.()}>
-      <Router uploadHandlerRef={uploadHandlerRef} />
+    <AppShell status={status} onUploadClick={() => uploadHandlerRef.current?.()}>
+      <Router uploadHandlerRef={uploadHandlerRef} onStatusChange={setStatus} />
     </AppShell>
   );
 }

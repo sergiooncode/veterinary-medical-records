@@ -2,21 +2,38 @@
 
 A system for intelligent processing system for veterinary medical records.
 
+## Table of Contents
+
+- [Architecture](#architecture)
+  - [Diagram](#diagram)
+- [Assumptions & Design Decisions](#assumptions--design-decisions)
+- [Future improvements](#future-improvements)
+- [Iterative and incremental approach](#iterative-and-incremental-approach)
+- [Development](#development)
+  - [Prerequisites](#prerequisites)
+  - [Setup](#setup)
+
 ## Architecture
 
 - **Frontend**: ReactJS with TypeScript and Vite for tooling
 - **Backend**: FastAPI (Python)
+- **AI Processing**: OpenAI GPT-4.1-mini for extraction of structured information from 
 - **Containerization**: Docker Compose for local development
 
 ## Assumptions & Design Decisions
 
 - **Monorepo Structure**: Chose monorepo with Docker Compose for convenient local development
 - **File Storage**: Local file storage is used for development; in production, S3 or similar would be used. Abstraction added around storage.
-- **Text Extraction**: Started with pypdf for PDF and pytesseract/PIL with OCR for images; can be extended with Word document parsing
+- **Text Extraction**: Started with pypdf for PDF and pytesseract/PIL with OCR for images
 
 ## Future improvements
 
-- TBA
+- Processing of a document can take from 10 sec up to 1 min or more for long veterinary medical records
+  - The /api/documents/process view could be modified to return immediately with a job id URL and status code 201
+  and the frontend could poll on that job id
+- Text extraction:
+  - Properly test certain image files like JPEG 
+  - It will be extended to Word documents (doc, docx)
 
 ## Iterative and incremental approach
 
@@ -64,6 +81,13 @@ A system for intelligent processing system for veterinary medical records.
 <img src="./resources/iterative_approach/iter4_0.png" width="600" />
 <br>
 <img src="./resources/iterative_approach/iter4_1.png" width="600" />
+<br>
+
+  - Add document processing status since to mitigate the UX for long documents
+
+<img src="./resources/iterative_approach/iter4_in_progress.png" width="600" />
+<br>
+<img src="./resources/iterative_approach/iter4_completed.png" width="600" />
 <br>
 
 - Iteration 5 – Save extracted text and structured info in DB so a user can continue reviewing a document without processing it again
