@@ -29,21 +29,37 @@ A system for intelligent processing system for veterinary medical records.
 
 - Iteration 3 – Wire to Real Backend Extraction API
 
-- Iteration 4 – Make the Structured Form Properly Editable
+- Iteration 4 – Save extracted text and structured info in DB so a user can continue reviewing a document without processing it again
 
 ## Architecture
 
 - **Frontend**: ReactJS with TypeScript and Vite for tooling
+- **Backend**: FastAPI (Python)
+- **Containerization**: Docker Compose for local development
+
+## Assumptions & Design Decisions
+
+- **Monorepo Structure**: Chose monorepo with Docker Compose for convenient local development
+- **File Storage**: Local file storage is used for development; in production, S3 or similar would be used. Abstraction added around storage.
 
 ## Development
+
+### Prerequisites
+
+- Docker and Docker Compose
 
 ### Setup
 
 - Frontend
 
 1. Clone the repository
-2. Run `make frontend-dev` to start all services
+2. Run `make frontend-dev` to start frontend service
 3. Access the frontend at http://localhost:3001
 
 - Backend
-1. 
+1. Run `make backend-dev` to start backend service
+2. Check is running at http://localhost:8000
+
+- Run tests
+  - Backend: `make backend-test`
+  - Frontend: `make frontend-test`
