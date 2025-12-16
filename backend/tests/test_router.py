@@ -61,13 +61,26 @@ def test_upload_empty_file(client):
 
 
 def test_process_document(client):
+    upload_resp = client.post(
+        "/api/documents/upload",
+        files={
+            "file": (
+                "test.docx",
+                b"fake docx content",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            )
+        },
+    )
+    assert upload_resp.status_code == 200
+    file_id = upload_resp.json()["id"]
+
     response = client.post(
         "/api/documents/process",
-        json={"file_id": "test-123"},
+        json={"file_id": file_id},
     )
     assert response.status_code == 200
     data = response.json()
-    assert data["file_id"] == "test-123"
+    assert data["file_id"] == file_id
     assert "extracted_text" in data
     assert "structured_data" in data
     assert data["status"] == "processed"

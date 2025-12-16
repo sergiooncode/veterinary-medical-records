@@ -8,7 +8,7 @@ dependencies = [
     "pydantic>=2.9.0",
     "pydantic-settings>=2.1.0",
     "python-multipart>=0.0.20",
-    "pypdf2>=3.0.1",
+    "pypdf>=5.1.0",
     "pytesseract>=0.3.13",
     "pillow>=10.0.0",
 ]

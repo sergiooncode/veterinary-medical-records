@@ -12,7 +12,7 @@ A system for intelligent processing system for veterinary medical records.
 
 - **Monorepo Structure**: Chose monorepo with Docker Compose for convenient local development
 - **File Storage**: Local file storage is used for development; in production, S3 or similar would be used. Abstraction added around storage.
-- **Text Extraction**: Started with PyPDF2 for PDF and pytesseract/PIL with OCR for images; can be extended with Word document parsing
+- **Text Extraction**: Started with pypdf for PDF and pytesseract/PIL with OCR for images; can be extended with Word document parsing
 
 ## Future improvements
 

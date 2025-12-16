@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytesseract
 from PIL import Image
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 
 from documents.exceptions import TextExtractionError, UnsupportedFileTypeError
 
