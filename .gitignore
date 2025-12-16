@@ -220,3 +220,5 @@ __marimo__/
 .cursorrules
 
 */node_modules
+
+backend/uploads/

@@ -60,7 +60,7 @@ export function DocumentsPage({ onStatusChange, uploadHandlerRef }: DocumentsPag
       veterinarian: 'Dr. Jane Smith',
     },
   });
-  const [extractedText] = useState<string>(
+  const [extractedText, setExtractedText] = useState<string>(
     [
       'Bella is a 12-year-old spayed female Labrador Retriever presenting for chronic ear infections.',
       'History of allergic dermatitis managed with diet and intermittent steroids.',
@@ -124,7 +124,7 @@ export function DocumentsPage({ onStatusChange, uploadHandlerRef }: DocumentsPag
     });
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (previewUrl) {
@@ -134,6 +134,48 @@ export function DocumentsPage({ onStatusChange, uploadHandlerRef }: DocumentsPag
     setPreviewUrl(url);
     setSelectedFile(file);
     setFileName(file.name);
+
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const uploadResponse = await fetch(`${apiUrl}/api/documents/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+      const uploadData = await uploadResponse.json();
+
+      const processResponse = await fetch(`${apiUrl}/api/documents/process`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ file_id: uploadData.id }),
+      });
+      const processData = await processResponse.json();
+
+      if (processData.extracted_text) {
+        setExtractedText(processData.extracted_text);
+      }
+      if (processData.structured_data) {
+        const sd = processData.structured_data;
+        setStructuredData({
+          petName: sd.pet_name || '',
+          species: sd.species || '',
+          breed: sd.breed || '',
+          weight: sd.weight || '',
+          diagnoses: sd.diagnoses || [],
+          past_medical_issues: sd.past_medical_issues || [],
+          chronic_conditions: sd.chronic_conditions || [],
+          procedures: sd.procedures || [],
+          medications: sd.medications || [],
+          symptom_onset_date: sd.symptom_onset_date || null,
+          notes: sd.notes || '',
+          clinic_info: sd.clinic_info || { name: null, address: null, phone: null, veterinarian: null },
+        });
+      }
+    } catch (error) {
+      console.error('Upload/process error:', error);
+    }
   };
 
   useEffect(() => {

@@ -16,7 +16,16 @@ A system for intelligent processing system for veterinary medical records.
 <br>
 <img src="./resources/iterative_approach/iter1_2.png" width="600" />
 
-- Iteration 2 – Extraction Flow (With Mock API First)
+- Iteration 2 – Extraction Flow (With Mock API First), file can be uploaded but when processed mock data is returned
+
+<img src="./resources/iterative_approach/iter2_0.png" width="600" />
+<br>
+<img src="./resources/iterative_approach/iter2_1.png" width="600" />
+<br>
+<img src="./resources/iterative_approach/iter2_2.png" width="600" />
+<br>
+<img src="./resources/iterative_approach/iter2_3.png" width="600" />
+<br>
 
 - Iteration 3 – Wire to Real Backend Extraction API
 
@@ -30,6 +39,11 @@ A system for intelligent processing system for veterinary medical records.
 
 ### Setup
 
+- Frontend
+
 1. Clone the repository
 2. Run `make frontend-dev` to start all services
 3. Access the frontend at http://localhost:3001
+
+- Backend
+1. 
