@@ -12,6 +12,8 @@ test('renders procedures count and fields', () => {
   render(<ProceduresSection procedures={procedures} onProcedureChange={onProcedureChange} />);
 
   expect(screen.getByText('Procedures (1)')).toBeInTheDocument();
+  
+  fireEvent.click(screen.getByText('Procedures (1)'));
   expect(screen.getByDisplayValue('X-Ray')).toBeInTheDocument();
 });
 
@@ -19,6 +21,7 @@ test('calls onProcedureChange when cost changes', () => {
   const onProcedureChange = jest.fn();
   render(<ProceduresSection procedures={procedures} onProcedureChange={onProcedureChange} />);
 
+  fireEvent.click(screen.getByText('Procedures (1)'));
   fireEvent.change(screen.getByDisplayValue('200'), { target: { value: '250' } });
   expect(onProcedureChange).toHaveBeenCalledWith(0, 'cost', 250);
 });

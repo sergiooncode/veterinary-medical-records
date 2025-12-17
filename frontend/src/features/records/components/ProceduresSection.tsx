@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Procedure } from '../../../types';
+import { FoldableSection } from '../../../shared/ui/FoldableSection';
 
 interface ProceduresSectionProps {
   procedures: Procedure[];
@@ -16,11 +17,7 @@ export function ProceduresSection({ procedures, onProcedureChange }: ProceduresS
   };
 
   return (
-    <div className="form-section">
-      <h3 className="section-title">
-        Procedures
-        {procedures.length > 0 ? ` (${procedures.length})` : ''}
-      </h3>
+    <FoldableSection title={`Procedures${procedures.length > 0 ? ` (${procedures.length})` : ''}`}>
       {procedures.length === 0 ? (
         <p className="empty-state">No procedures recorded</p>
       ) : (
@@ -88,6 +85,6 @@ export function ProceduresSection({ procedures, onProcedureChange }: ProceduresS
           ))}
         </div>
       )}
-    </div>
+    </FoldableSection>
   );
 }

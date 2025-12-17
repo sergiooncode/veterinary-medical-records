@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Medication } from '../../../types';
+import { FoldableSection } from '../../../shared/ui/FoldableSection';
 
 interface MedicationsSectionProps {
   medications: Medication[];
@@ -18,11 +19,7 @@ export function MedicationsSection({ medications, onMedicationChange }: Medicati
   };
 
   return (
-    <div className="form-section">
-      <h3 className="section-title">
-        Medications
-        {medications.length > 0 ? ` (${medications.length})` : ''}
-      </h3>
+    <FoldableSection title={`Medications${medications.length > 0 ? ` (${medications.length})` : ''}`}>
       {medications.length === 0 ? (
         <p className="empty-state">No medications recorded</p>
       ) : (
@@ -91,6 +88,6 @@ export function MedicationsSection({ medications, onMedicationChange }: Medicati
           ))}
         </div>
       )}
-    </div>
+    </FoldableSection>
   );
 }

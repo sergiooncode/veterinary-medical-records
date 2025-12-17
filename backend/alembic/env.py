@@ -16,7 +16,9 @@ import sqlalchemy as sa
 import sqlmodel
 from sqlmodel import SQLModel
 
-from documents.models import Document
+from documents.models import DocumentProcessingRun
+from metrics.models import DocumentProcessingRunMetrics
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

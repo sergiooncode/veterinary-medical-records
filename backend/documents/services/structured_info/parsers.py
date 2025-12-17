@@ -1,5 +1,5 @@
 import json
-from typing import Optional
+from typing import Any, Optional
 
 from openai import OpenAI
 
@@ -63,8 +63,21 @@ IMPORTANT: Extract dates whenever possible as they are critical for:
 Extract CPT/ICD codes if mentioned in the document. Extract costs if included."""
 
 
-def parse_structured_data(text: str, logger, client: Optional[OpenAI] = None) -> dict:
-    """Parse extracted text into structured medical record data using OpenAI."""
+def parse_structured_data(
+    text: str, logger, client: Optional[OpenAI] = None, model: str = "gpt-4o-mini"
+) -> tuple[dict, Optional[int], Optional[int], str]:
+    """
+    Parse extracted text into structured medical record data using OpenAI.
+    
+    Args:
+        text: Extracted text to parse
+        logger: Logger instance
+        client: Optional OpenAI client (uses default if not provided)
+        model: LLM model name to use (default: "gpt-4o-mini")
+    
+    Returns:
+        Tuple of (structured_data_dict, prompt_tokens, completion_tokens, model_name)
+    """
     logger.info("Parsing structured data from extracted text")
 
     llm_client = client or get_openai_client()
@@ -73,7 +86,7 @@ def parse_structured_data(text: str, logger, client: Optional[OpenAI] = None) ->
         user_prompt = USER_PROMPT_V0.format(text=text)
         try:
             response = llm_client.chat.completions.create(
-                model="gpt-4.1-mini",
+                model=model,
                 messages=[
                     {"role": "system", "content": SYSTEM_PROMPT_V0},
                     {"role": "user", "content": user_prompt},
@@ -82,14 +95,20 @@ def parse_structured_data(text: str, logger, client: Optional[OpenAI] = None) ->
             )
             content = response.choices[0].message.content or "{}"
             result = json.loads(content)
-            return result
+            logger.info(f"Parsed structured data: {result}")
+            
+            prompt_tokens = response.usage.prompt_tokens if response.usage else None
+            completion_tokens = response.usage.completion_tokens if response.usage else None
+            actual_model = response.model
+            
+            return result, prompt_tokens, completion_tokens, actual_model
         except Exception as e:
             logger.warning(f"OpenAI parsing failed, using fallback: {str(e)}")
     else:
         logger.warning("OpenAI API key not configured, using basic extraction")
 
     # Fallback to basic extraction with neutral placeholders
-    return {
+    fallback: dict[str, Any] = {
         "pet_name": None,
         "species": None,
         "breed": None,
@@ -108,3 +127,4 @@ def parse_structured_data(text: str, logger, client: Optional[OpenAI] = None) ->
             "veterinarian": None,
         },
     }
+    return fallback, None, None, model

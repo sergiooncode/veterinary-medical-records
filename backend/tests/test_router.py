@@ -99,7 +99,9 @@ def test_list_documents_includes_uploaded_file(client):
     payload = list_resp.json()
     assert "documents" in payload
     docs = payload["documents"]
-    assert any(doc["id"] == file_id and doc["filename"] == "list-test.pdf" for doc in docs)
+    assert any(
+        doc["id"] == file_id and doc["filename"] == "list-test.pdf" for doc in docs
+    )
 
 
 def test_retrieve_document_returns_details(client):

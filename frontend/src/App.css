@@ -124,6 +124,29 @@ body {
   margin-bottom: 0.75rem;
 }
 
+.foldable-title {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.2s ease;
+}
+
+.foldable-title:hover {
+  color: #3498db;
+}
+
+.foldable-icon {
+  font-size: 0.75rem;
+  color: #7f8c8d;
+  transition: transform 0.2s ease;
+}
+
+.foldable-content {
+  margin-top: 0.75rem;
+}
+
 .form-group {
   margin-bottom: 1rem;
 }

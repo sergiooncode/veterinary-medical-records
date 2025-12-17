@@ -12,6 +12,8 @@ test('renders diagnoses count and fields', () => {
   render(<DiagnosesSection diagnoses={diagnoses} onDiagnosisChange={onDiagnosisChange} />);
 
   expect(screen.getByText('Diagnoses (1)')).toBeInTheDocument();
+  
+  fireEvent.click(screen.getByText('Diagnoses (1)'));
   expect(screen.getByDisplayValue('Otitis')).toBeInTheDocument();
 });
 
@@ -19,6 +21,7 @@ test('calls onDiagnosisChange when toggling chronic condition', () => {
   const onDiagnosisChange = jest.fn();
   render(<DiagnosesSection diagnoses={diagnoses} onDiagnosisChange={onDiagnosisChange} />);
 
+  fireEvent.click(screen.getByText('Diagnoses (1)'));
   const checkbox = screen.getByRole('checkbox');
   fireEvent.click(checkbox);
   expect(onDiagnosisChange).toHaveBeenCalledWith(0, 'is_chronic', true);

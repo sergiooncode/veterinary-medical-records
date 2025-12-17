@@ -27,6 +27,8 @@ test('renders pet fields and updates via onFieldChange', () => {
   const onFieldChange = jest.fn();
   render(<PetInfoSection structuredData={data} onFieldChange={onFieldChange} />);
 
+  fireEvent.click(screen.getByText('Pet Information'));
+
   expect(screen.getByDisplayValue('Bella')).toBeInTheDocument();
 
   fireEvent.change(screen.getByDisplayValue('25 kg'), { target: { value: '26 kg' } });

@@ -1,5 +1,6 @@
 import React from 'react';
 import type { ClinicInfo } from '../../../types';
+import { FoldableSection } from '../../../shared/ui/FoldableSection';
 
 interface ClinicInfoSectionProps {
   clinicInfo: ClinicInfo;
@@ -8,8 +9,7 @@ interface ClinicInfoSectionProps {
 
 export function ClinicInfoSection({ clinicInfo, onClinicInfoChange }: ClinicInfoSectionProps): JSX.Element {
   return (
-    <div className="form-section">
-      <h3 className="section-title">Clinic Information</h3>
+    <FoldableSection title="Clinic Information">
       <div className="form-group">
         <label>Clinic Name</label>
         <input
@@ -46,7 +46,7 @@ export function ClinicInfoSection({ clinicInfo, onClinicInfoChange }: ClinicInfo
           className="form-input"
         />
       </div>
-    </div>
+    </FoldableSection>
   );
 }
 

@@ -14,6 +14,8 @@ test('renders clinic info fields and updates via onClinicInfoChange', () => {
   const onClinicInfoChange = jest.fn();
   render(<ClinicInfoSection clinicInfo={clinicInfo} onClinicInfoChange={onClinicInfoChange} />);
 
+  fireEvent.click(screen.getByText('Clinic Information'));
+
   expect(screen.getByDisplayValue('Happy Paws')).toBeInTheDocument();
 
   const phoneInput = screen.getByDisplayValue('555-123-4567');

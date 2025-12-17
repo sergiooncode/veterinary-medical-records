@@ -39,6 +39,8 @@ test('renders Structured Record header and pet info section', () => {
   );
 
   expect(screen.getByText('Structured Record')).toBeInTheDocument();
+  
+  fireEvent.click(screen.getByText('Pet Information'));
   expect(screen.getByDisplayValue('Bella')).toBeInTheDocument();
 });
 
@@ -57,6 +59,7 @@ test('calls onFieldChange when editing notes', () => {
     />,
   );
 
+  fireEvent.click(screen.getByText('Clinical Notes'));
   fireEvent.change(
     screen.getByPlaceholderText('Additional clinical notes and observations'),
     { target: { value: 'New note' } },

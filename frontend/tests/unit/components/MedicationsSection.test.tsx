@@ -18,6 +18,8 @@ test('renders medications count and fields', () => {
   render(<MedicationsSection medications={medications} onMedicationChange={onMedicationChange} />);
 
   expect(screen.getByText('Medications (1)')).toBeInTheDocument();
+  
+  fireEvent.click(screen.getByText('Medications (1)'));
   expect(screen.getByDisplayValue('Prednisone')).toBeInTheDocument();
 });
 
@@ -25,6 +27,7 @@ test('calls onMedicationChange when frequency changes', () => {
   const onMedicationChange = jest.fn();
   render(<MedicationsSection medications={medications} onMedicationChange={onMedicationChange} />);
 
+  fireEvent.click(screen.getByText('Medications (1)'));
   fireEvent.change(screen.getByPlaceholderText('e.g., Twice daily'), { target: { value: 'BID' } });
   expect(onMedicationChange).toHaveBeenCalledWith(0, 'frequency', 'BID');
 });

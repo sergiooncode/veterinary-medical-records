@@ -71,22 +71,6 @@ export function DocumentPreview({ previewUrl, fileName, selectedFile, currentPag
           </div>
         )}
       </div>
-      {previewUrl && (
-        <div className="page-thumbnails">
-          <div className={`thumbnail ${currentPage === 1 ? 'active' : ''}`} onClick={() => onPageChange(1)}>
-            <div className="thumbnail-content"></div>
-            <span className="thumbnail-number">1</span>
-          </div>
-          <div className={`thumbnail ${currentPage === 2 ? 'active' : ''}`} onClick={() => onPageChange(2)}>
-            <div className="thumbnail-content"></div>
-            <span className="thumbnail-number">2</span>
-          </div>
-          <div className={`thumbnail ${currentPage === 3 ? 'active' : ''}`} onClick={() => onPageChange(3)}>
-            <div className="thumbnail-content"></div>
-            <span className="thumbnail-number">3</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

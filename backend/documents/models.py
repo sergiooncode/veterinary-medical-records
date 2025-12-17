@@ -4,10 +4,14 @@ from typing import Optional, Dict, Any
 from sqlmodel import SQLModel, Field, Column, JSON, Text
 
 
-class Document(SQLModel, table=True):
-    """Database model for veterinary medical record documents."""
+class DocumentProcessingRun(SQLModel, table=True):
+    """Database model for a single processing run of a veterinary medical record document.
+    
+    A document file can be processed multiple times, each creating a new processing run
+    with potentially different extracted text and structured data.
+    """
 
-    __tablename__ = "documents"
+    __tablename__ = "document_processing_runs"
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()), primary_key=True)
     filename: str

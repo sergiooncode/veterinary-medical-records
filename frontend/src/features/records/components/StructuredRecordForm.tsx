@@ -6,6 +6,7 @@ import { ProceduresSection } from './ProceduresSection';
 import { MedicationsSection } from './MedicationsSection';
 import { PastMedicalIssuesSection } from './PastMedicalIssuesSection';
 import { ClinicInfoSection } from './ClinicInfoSection';
+import { FoldableSection } from '../../../shared/ui/FoldableSection';
 
 interface StructuredRecordFormProps {
   structuredData: StructuredData;
@@ -64,8 +65,7 @@ export function StructuredRecordForm({
           onMedicationChange={onMedicationChange}
         />
 
-        <div className="form-section">
-          <h3 className="section-title">Symptom Onset Date</h3>
+        <FoldableSection title="Symptom Onset Date">
           <div className="form-group">
             <label>Date</label>
             <input
@@ -75,10 +75,9 @@ export function StructuredRecordForm({
               className="form-input"
             />
           </div>
-        </div>
+        </FoldableSection>
 
-        <div className="form-section">
-          <h3 className="section-title">Clinical Notes</h3>
+        <FoldableSection title="Clinical Notes">
           <div className="form-group">
             <label>Notes</label>
             <textarea
@@ -89,7 +88,7 @@ export function StructuredRecordForm({
               placeholder="Additional clinical notes and observations"
             />
           </div>
-        </div>
+        </FoldableSection>
 
         <ClinicInfoSection
           clinicInfo={structuredData.clinic_info}

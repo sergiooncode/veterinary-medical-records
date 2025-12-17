@@ -1,5 +1,6 @@
 import React from 'react';
 import type { StructuredData } from '../../../types';
+import { FoldableSection } from '../../../shared/ui/FoldableSection';
 
 interface PetInfoSectionProps {
   structuredData: StructuredData;
@@ -12,8 +13,7 @@ interface PetInfoSectionProps {
  */
 export function PetInfoSection({ structuredData, onFieldChange }: PetInfoSectionProps): JSX.Element {
   return (
-    <div className="form-section">
-      <h3 className="section-title">Pet Information</h3>
+    <FoldableSection title="Pet Information">
       <div className="form-group">
         <label>Name</label>
         <input
@@ -50,7 +50,7 @@ export function PetInfoSection({ structuredData, onFieldChange }: PetInfoSection
           className="form-input"
         />
       </div>
-    </div>
+    </FoldableSection>
   );
 }
 

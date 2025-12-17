@@ -1,0 +1,63 @@
+# Git
+.git
+.gitignore
+
+# Node modules
+node_modules
+frontend/node_modules
+**/node_modules
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info
+dist
+build
+backend/__pycache__
+backend/.pytest_cache
+backend/.venv
+backend/venv
+.venv
+venv
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+frontend/build
+frontend/dist
+
+# Uploads (don't copy uploads into image)
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Documentation
+*.md
+!README.md
+
+# Resources (optional - uncomment if you don't want resources in image)
+# resources/
+
+

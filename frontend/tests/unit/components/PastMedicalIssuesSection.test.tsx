@@ -12,6 +12,8 @@ test('renders empty states when no issues or conditions', () => {
     />,
   );
 
+  fireEvent.click(screen.getByText('Past Medical Issues & Chronic Conditions'));
+
   expect(screen.getByText('No past medical issues recorded')).toBeInTheDocument();
   expect(screen.getByText('No chronic conditions recorded')).toBeInTheDocument();
 });
@@ -28,6 +30,8 @@ test('calls change handlers when editing inputs', () => {
       onChronicConditionChange={onChronicConditionChange}
     />,
   );
+
+  fireEvent.click(screen.getByText('Past Medical Issues & Chronic Conditions (2)'));
 
   fireEvent.change(screen.getByDisplayValue('Dermatitis'), {
     target: { value: 'Updated issue' },

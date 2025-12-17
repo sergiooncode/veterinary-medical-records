@@ -1,4 +1,5 @@
 import React from 'react';
+import { FoldableSection } from '../../../shared/ui/FoldableSection';
 
 interface PastMedicalIssuesSectionProps {
   pastMedicalIssues: string[];
@@ -16,11 +17,9 @@ export function PastMedicalIssuesSection({
   const totalCount = pastMedicalIssues.length + chronicConditions.length;
 
   return (
-    <div className="form-section">
-      <h3 className="section-title">
-        Past Medical Issues &amp; Chronic Conditions
-        {totalCount > 0 ? ` (${totalCount})` : ''}
-      </h3>
+    <FoldableSection
+      title={`Past Medical Issues & Chronic Conditions${totalCount > 0 ? ` (${totalCount})` : ''}`}
+    >
 
       <div className="form-subsection">
         <h4 className="subsection-title">Past Medical Issues ({pastMedicalIssues.length})</h4>
@@ -69,7 +68,7 @@ export function PastMedicalIssuesSection({
           </div>
         )}
       </div>
-    </div>
+    </FoldableSection>
   );
 }
 
