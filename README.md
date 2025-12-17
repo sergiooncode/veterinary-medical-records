@@ -94,6 +94,7 @@ Stores performance and quality metrics for each document processing run, enablin
 - /api/document/process: accepts POST to process a document given the file_id given in the `upload` operation
 - /api/document: accepts GET to list all documents processing runs including the name of the document.
 - /api/document/<document_file_id>: accepts GET to retrieve the result (extracted_text and structured_data) of a document processing run
+- /api/document/<document_file_id>/status: accepts GET to retrieve the status of a document processing run
 
 ## How The Structured Info Supports Claim Adjudication (Core of the Problem)
 
