@@ -17,9 +17,7 @@ from .exceptions import (
 )
 from .models import DocumentProcessingRun
 from .schemas import ProcessRequest, ValidatedFile
-from .services.structured_info.parsers import parse_structured_data
-from .services.text_extraction.extractors import extract_text_from_file
-from metrics.services import create_processing_metrics
+from .tasks import process_document_task
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 
@@ -101,46 +99,28 @@ async def process_document(
         )
 
     try:
-        # TODO: move the calls to extract_text_from_file and parse_structured_data to a Celery task
-        start_time = time.time()
-        extracted_text = extract_text_from_file(file_path)
-        structured_data, prompt_tokens, completion_tokens, model_name = parse_structured_data(
-            extracted_text, logger
-        )
-        processing_time = time.time() - start_time
-
-        processing_run.extracted_text = extracted_text
-        processing_run.structured_data = structured_data
+        processing_run.run_status = "processing"
         processing_run.updated_at = datetime.now(UTC)
         session.add(processing_run)
         session.commit()
-        session.refresh(processing_run)
 
-        # TODO: move the function call and DB insert to a Celery task
-        metrics = create_processing_metrics(
-            document_id=file_id,
-            extracted_text=extracted_text,
-            structured_data=structured_data,
-            file_path=file_path,
-            prompt_tokens=prompt_tokens,
-            completion_tokens=completion_tokens,
-            model=model_name,
-            processing_time=processing_time,
+        process_document_task.apply_async(
+            args=[
+                file_id,
+                str(file_path),
+            ]
         )
-        session.add(metrics)
-        session.commit()
 
-        logger.info(f"Processing run completed: {file_id}")
+        poll_url = f"/api/documents/{file_id}/status"
 
-        result_data = {
-            "file_id": file_id,
-            "filename": "filename",
-            "extracted_text": extracted_text,
-            "structured_data": structured_data,
-            "status": "processed",
-        }
-
-        return JSONResponse(status_code=200, content=result_data)
+        return JSONResponse(
+            status_code=201,
+            content={
+                "file_id": file_id,
+                "status": "processing",
+                "status_url": poll_url,
+            },
+        )
     except UnsupportedFileTypeError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except TextExtractionError as e:
@@ -183,7 +163,7 @@ async def list_documents(
             "document_type": run.document_type,
             "created_at": run.created_at.isoformat() if run.created_at else None,
             "updated_at": run.updated_at.isoformat() if run.updated_at else None,
-            "status": "processed" if run.extracted_text else "uploaded",
+            "status": run.run_status,
         }
         for run in processing_runs
     ]
@@ -213,7 +193,28 @@ async def retrieve_document(
         "filename": processing_run.filename,
         "extracted_text": processing_run.extracted_text,
         "structured_data": processing_run.structured_data,
-        "status": "processed" if processing_run.extracted_text else "uploaded",
+        "status": processing_run.run_status,
     }
 
     return JSONResponse(status_code=200, content=result_data)
+
+
+@router.get("/{file_id}/status")
+async def retrieve_document_status(
+    file_id: str,
+    session: Session = Depends(get_session),
+):
+    """Retrieve processing status for a document processing run."""
+    statement = select(DocumentProcessingRun).where(DocumentProcessingRun.id == file_id)
+    processing_run = session.exec(statement).first()
+
+    if not processing_run:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Processing run with ID {file_id} not found",
+        )
+
+    return JSONResponse(
+        status_code=200,
+        content={"file_id": processing_run.id, "status": processing_run.run_status},
+    )

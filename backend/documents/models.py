@@ -1,7 +1,15 @@
 import uuid
 from datetime import datetime, UTC
+from enum import Enum
 from typing import Optional, Dict, Any
 from sqlmodel import SQLModel, Field, Column, JSON, Text
+
+
+class RunStatus(str, Enum):
+    UPLOADED = "uploaded"
+    PROCESSING = "processing"
+    COMPLETED = "completed"
+    FAILED = "failed"
 
 
 class DocumentProcessingRun(SQLModel, table=True):
@@ -20,6 +28,10 @@ class DocumentProcessingRun(SQLModel, table=True):
     extracted_text: Optional[str] = Field(default=None, sa_column=Column(Text))
     structured_data: Optional[Dict[str, Any]] = Field(
         default=None, sa_column=Column(JSON)
+    )
+    run_status: RunStatus = Field(
+        default=RunStatus.UPLOADED,
+        description="Processing status: uploaded|processing|completed|failed",
     )
     created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))

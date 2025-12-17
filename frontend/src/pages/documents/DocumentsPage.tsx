@@ -99,8 +99,9 @@ export function DocumentsPage({ onStatusChange, uploadHandlerRef }: DocumentsPag
     });
   };
 
+  const apiUrl = (import.meta as any).env?.VITE_API_URL || 'http://localhost:8000';
+
   const handleDocumentSelect = async (documentId: string): Promise<void> => {
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
     try {
       const response = await fetch(`${apiUrl}/api/documents/${documentId}`);
       if (!response.ok) {
@@ -150,47 +151,96 @@ export function DocumentsPage({ onStatusChange, uploadHandlerRef }: DocumentsPag
     setSelectedFile(file);
     setFileName(file.name);
 
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
     const formData = new FormData();
     formData.append('file', file);
 
     try {
-      if (onStatusChange) onStatusChange('In Progress');
       const uploadResponse = await fetch(`${apiUrl}/api/documents/upload`, {
         method: 'POST',
         body: formData,
       });
+      if (!uploadResponse.ok) {
+        throw new Error(`Upload failed: ${uploadResponse.statusText}`);
+      }
       const uploadData = await uploadResponse.json();
 
+      if (onStatusChange) onStatusChange('In Progress');
       const processResponse = await fetch(`${apiUrl}/api/documents/process`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ file_id: uploadData.id }),
       });
+      if (!processResponse.ok) {
+        throw new Error(`Process request failed: ${processResponse.statusText}`);
+      }
       const processData = await processResponse.json();
 
-      if (processData.extracted_text) {
-        setExtractedText(processData.extracted_text);
-      }
-      if (processData.structured_data) {
-        const sd = processData.structured_data;
-        setStructuredData({
-          petName: sd.pet_name || '',
-          species: sd.species || '',
-          breed: sd.breed || '',
-          weight: sd.weight || '',
-          diagnoses: sd.diagnoses || [],
-          past_medical_issues: sd.past_medical_issues || [],
-          chronic_conditions: sd.chronic_conditions || [],
-          procedures: sd.procedures || [],
-          medications: sd.medications || [],
-          symptom_onset_date: sd.symptom_onset_date || null,
-          notes: sd.notes || '',
-          clinic_info: sd.clinic_info || { name: null, address: null, phone: null, veterinarian: null },
-        });
-      }
-      setDocumentsRefreshKey((prev) => prev + 1);
-      if (onStatusChange) onStatusChange('Completed');
+      const fileId: string = uploadData.id;
+      const statusPath: string = processData.status_url || `/api/documents/${fileId}/status`;
+
+      const pollStatus = async (): Promise<void> => {
+        const maxAttempts = 30;
+        const delay = (ms: number): Promise<void> =>
+          new Promise((resolve) => setTimeout(resolve, ms));
+
+        for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+          const statusResponse = await fetch(`${apiUrl}${statusPath}`);
+          if (!statusResponse.ok) {
+            throw new Error(`Status check failed: ${statusResponse.statusText}`);
+          }
+          const statusData = await statusResponse.json();
+          const currentStatus = String(statusData.status || '').toLowerCase();
+
+          if (currentStatus === 'completed') {
+            const detailResponse = await fetch(`${apiUrl}/api/documents/${fileId}`);
+            if (!detailResponse.ok) {
+              throw new Error(`Detail fetch failed: ${detailResponse.statusText}`);
+            }
+            const detailData = await detailResponse.json();
+
+            setFileName(detailData.filename || file.name);
+            if (detailData.extracted_text) {
+              setExtractedText(detailData.extracted_text);
+            }
+            if (detailData.structured_data) {
+              const sd = detailData.structured_data;
+              setStructuredData({
+                petName: sd.pet_name || '',
+                species: sd.species || '',
+                breed: sd.breed || '',
+                weight: sd.weight || '',
+                diagnoses: sd.diagnoses || [],
+                past_medical_issues: sd.past_medical_issues || [],
+                chronic_conditions: sd.chronic_conditions || [],
+                procedures: sd.procedures || [],
+                medications: sd.medications || [],
+                symptom_onset_date: sd.symptom_onset_date || null,
+                notes: sd.notes || '',
+                clinic_info: sd.clinic_info || {
+                  name: null,
+                  address: null,
+                  phone: null,
+                  veterinarian: null,
+                },
+              });
+            }
+
+            setDocumentsRefreshKey((prev) => prev + 1);
+            if (onStatusChange) onStatusChange('Completed');
+            return;
+          }
+
+          if (currentStatus === 'failed') {
+            throw new Error('Document processing failed');
+          }
+
+          await delay(2000);
+        }
+
+        throw new Error('Document processing timed out');
+      };
+
+      await pollStatus();
     } catch (error) {
       console.error('Upload/process error:', error);
       if (onStatusChange) onStatusChange('Ready');

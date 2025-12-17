@@ -36,7 +36,7 @@ A system for intelligent processing system for veterinary medical records.
 
 ### Diagram
 
-<img src="./resources/vet_medical_records.drawio.png" width="600" />
+<img src="./resources/vet_medical_records.drawio.png" width="800" />
 
 ### Database model
 
@@ -289,6 +289,7 @@ as future improvement
 <img src="./resources/iterative_approach/iter6_1.png" width="600" />
 <br>
 
+### Iteration 7 - Modify process endpoint to return URL to poll, add endpoint to poll on a run and Celery worker to defer the task of processing a document
 
 ## Development
 
@@ -299,10 +300,11 @@ as future improvement
 ### Setup
 
 1. Clone the repository
-2. Run `make create-dev` to start frontend service
+2. Run `make create-dev` to start backend and frontend services
 3. Access the frontend at http://localhost:3001
 4. You can check the backend is running at http://localhost:8000
 5. Run `make logs` to see logs of all services
+6. Run `make down` 
 
 - Run tests
   - Backend: `make backend-test`

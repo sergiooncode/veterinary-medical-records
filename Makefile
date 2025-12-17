@@ -64,6 +64,10 @@ logs:
 		docker-compose logs -f --tail=100 $(SERVICE); \
 	fi
 
+down: ## Stop and remove all containers, networks, and default resources
+	@echo "Stopping all docker-compose services..."
+	@docker-compose down
+
 migrate: ## Run database migrations
 	@echo "Running database migrations..."
 	@if ! docker ps | grep -q veterinary-backend; then \
@@ -87,9 +91,9 @@ makemigrations:
 dbshell:
 	@docker exec -it veterinary-postgres psql -U veterinary_user -d veterinary_db
 
-create-dev: ensure-env-local ensure-network ## Build and run all containers (backend, frontend, postgres)
+create-dev: ensure-env-local ensure-network ## Build and run all containers (backend, frontend, postgres, redis, celery-worker)
 	@echo "Building and starting all containers..."
-	@docker-compose up -d --build postgres backend frontend
+	@docker-compose up -d --build postgres redis backend celery-worker frontend
 	@echo "Waiting for services to be ready..."
 	@sleep 5
 	@echo "Running database migrations..."
