@@ -104,12 +104,7 @@ async def process_document(
         session.add(processing_run)
         session.commit()
 
-        process_document_task.apply_async(
-            args=[
-                file_id,
-                str(file_path),
-            ]
-        )
+        await send_process_document_task(file_id, file_path)
 
         poll_url = f"/api/documents/{file_id}/status"
 
@@ -129,6 +124,15 @@ async def process_document(
         raise HTTPException(
             status_code=500, detail=f"Failed to process document run: {str(e)}"
         )
+
+
+async def send_process_document_task(file_id, file_path):
+    process_document_task.apply_async(
+        args=[
+            file_id,
+            str(file_path),
+        ]
+    )
 
 
 @router.get("")
