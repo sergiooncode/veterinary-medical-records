@@ -6,6 +6,7 @@ A system for intelligent processing system for veterinary medical records.
 
 - [Architecture](#architecture)
   - [Diagram](#diagram)
+  - [Database model](#database-model)
   - [API endpoints](#api-endpoints)
 - [How The Structured Info Supports Claim Adjudication (Core of the Problem)](#how-the-structured-info-supports-claim-adjudication)
   - [(A) Pre-existing Condition Evaluation](#a-pre-existing-condition-evaluation)
