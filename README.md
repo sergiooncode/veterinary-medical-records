@@ -190,11 +190,6 @@ be more than one symptom so this approach has limitations
 
 ## Future improvements
 
-- At the moment the processing of a document can take from 10 sec up to ~40 sec or more for long veterinary medical records which keeps the
-frontend waiting
-  - Improvement: The `/api/documents/process` view could be modified to return immediately with status code 201 and a body
-  including a URL like `/api/documents/process/<document_file_id>` for the frontend to poll/GET on that URL until status
-  changed to COMPLETED
 - Text extraction:
   - Properly test certain image files like JPEG 
   - It will be extended to Word documents (doc, docx)
