@@ -23,6 +23,7 @@ A system for intelligent processing system for veterinary medical records.
   - [Iteration 4 – Wire structured info service on API to extract that info given the extracted text from the document](#iteration-4--wire-structured-info-service-on-api-to-extract-that-info-given-the-extracted-text-from-the-document)
   - [Iteration 5 – Save extracted text and structured info in DB and add endpoint to list processed documents](#iteration-5--save-extracted-text-and-structured-info-in-db-and-add-endpoint-to-list-processed-documents)
   - [Iteration 6 - Make the sections in Structure Info foldable for better UX for vet team](#iteration-6---make-the-sections-in-structure-info-foldable-for-better-ux-for-vet-team)
+  - [Iteration 7 - Modify process endpoint to return URL to poll, add endpoint to poll on a run and Celery worker to defer the task of processing a document](#iteration-6---modify-process-endpoint-to-return-url-to-poll-add-endpoint-to-poll-on-a-run-and-celery-worker-to-defer-the-task-of-processing-a-document)
 - [Development](#development)
   - [Prerequisites](#prerequisites)
   - [Setup](#setup)
@@ -304,7 +305,7 @@ as future improvement
 3. Access the frontend at http://localhost:3001
 4. You can check the backend is running at http://localhost:8000
 5. Run `make logs` to see logs of all services
-6. Run `make down` 
+6. Run `make down` to stop all services
 
 - Run tests
   - Backend: `make backend-test`
