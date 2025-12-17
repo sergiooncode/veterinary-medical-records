@@ -99,6 +99,9 @@ Stores performance and quality metrics for each document processing run, enablin
 The structured medical record is intentionally designed to support these downstream decisions.
 The extracted data structure addresses three critical areas of claim adjudication:
 
+<img src="./resources/core_of_problem.png" width="600" />
+<br>
+
 ### (A) Pre-existing Condition Evaluation
 
 The system extracts and structures data needed to determine pre-existing conditions:
@@ -181,6 +184,8 @@ veterinary_db=# select * from document_processing_run_metrics;
 - **Document List API**: The vet team cares about a document the uploaded regardless of it has been uploaded/processed several times
 so the document list operations returns the latest processing run for that document, it was naively assumed the name of the file
 will be unique, using a better mechanism based on hashing to know if a file uploaded was the same as one already processed
+- **Symptom onset date**: it was assumed that LLM would extract only one date and reflected in the system prompt, there can
+be more than one symptom so this approach has limitations
 
 ## Future improvements
 
@@ -207,7 +212,9 @@ frontend waiting
   - Schema compliance: Ensure output matches the expected JSON schema structure and data types.
   - Insurance claim readiness: Verify all required fields for claim adjudication are present and correctly formatted.
   - Token efficiency: Track cost per successfully extracted field to evaluate model cost-effectiveness.
-- Based on the eval `Hallucination detection` mentioned above, consider if guardrails in the prompts are needed since there none at the moment.
+- Based on the eval `Hallucination detection` mentioned above, consider if guardrails in the prompts are needed since there are none at the moment.
+- Events could be emitted along the medical record processing for consumers to receive them, some of those events could be:
+  - medical_record_processed: the event payload could include document_processing_run_id
 
 ## Iterative and incremental approach
 
@@ -291,15 +298,11 @@ as future improvement
 
 ### Setup
 
-- Frontend
-
 1. Clone the repository
-2. Run `make frontend-dev` to start frontend service
+2. Run `make create-dev` to start frontend service
 3. Access the frontend at http://localhost:3001
-
-- Backend
-1. Run `make backend-dev` to start backend service
-2. Check is running at http://localhost:8000
+4. You can check the backend is running at http://localhost:8000
+5. Run `make logs` to see logs of all services
 
 - Run tests
   - Backend: `make backend-test`

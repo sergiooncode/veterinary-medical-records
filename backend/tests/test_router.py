@@ -1,31 +1,3 @@
-import tempfile
-from pathlib import Path
-from unittest.mock import patch
-
-import pytest
-from fastapi import APIRouter, FastAPI
-from fastapi.testclient import TestClient
-
-from documents.router import router
-from documents.storage import LocalStorage
-
-app = FastAPI()
-api_router = APIRouter(prefix="/api")
-api_router.include_router(router)
-app.include_router(api_router)
-
-
-@pytest.fixture
-def temp_storage():
-    with tempfile.TemporaryDirectory() as tmpdir:
-        storage = LocalStorage(Path(tmpdir))
-        with patch("documents.router.storage", storage):
-            yield storage
-
-
-@pytest.fixture
-def client(temp_storage):
-    return TestClient(app)
 
 
 def test_upload_valid_file(client):
