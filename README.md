@@ -8,7 +8,7 @@ A system for intelligent processing system for veterinary medical records.
   - [Diagram](#diagram)
   - [Database model](#database-model)
   - [API endpoints](#api-endpoints)
-- [How The Structured Info Supports Claim Adjudication (Core of the Problem)](#how-the-structured-info-supports-claim-adjudication--core-of-the-problem)
+- [How The Structured Info Supports Claim Adjudication (Core of the Problem)](#how-the-structured-info-supports-claim-adjudication-core-of-the-problem)
   - [(A) Pre-existing Condition Evaluation](#a-pre-existing-condition-evaluation)
   - [(B) Waiting Period Evaluation](#b-waiting-period-evaluation)
   - [(C) Invoice Line Approval/Rejection](#c-invoice-line-approvalrejection)
