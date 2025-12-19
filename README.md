@@ -183,7 +183,7 @@ veterinary_db=# select * from document_processing_run_metrics;
 - **Monorepo Structure**: Chose monorepo with Docker Compose for convenient local development
 - **File Storage**: Local file storage is used for development; in production, S3 or similar would be used. Abstraction added around storage.
 - **Text Extraction**: Started with pypdf for PDF and pytesseract/PIL with OCR for images
-- **Document List API**: The vet team cares about a document the uploaded regardless of it has been uploaded/processed several times
+- **Document List API**: The vet team cares about a document they uploaded regardless if it has been uploaded/processed several times
 so the document list operations returns the latest processing run for that document, it was naively assumed the name of the file
 will be unique, using a better mechanism based on the hashing part of the document content to know if a file uploaded had already been uploaded before, would be more solid
 - **Symptom onset date**: it was assumed that LLM would extract only one date and reflected in the system prompt, there can
